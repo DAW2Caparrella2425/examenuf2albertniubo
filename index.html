@@ -1,0 +1,73 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pacman Game</title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="Pacman Game with P5.js">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+
+  <script src="js/libraries/p5.min.js" type="module"></script>
+  <script src="js/libraries/addons/p5.sound.js" type="module"></script>
+  <script src="js/sketch2.js" type="module"></script>
+  <style>
+    header {
+      background-color: #ffcc00;
+      text-align: center;
+      padding: 20px 0;
+    }
+    h1 {
+      color: #000;
+      font-family: Arial, sans-serif;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    button {
+      padding: 15px 25px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #0078d7;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #005a9e;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Pacman Game</h1>
+  </header>
+
+  <nav>
+    <button onclick="alert('Autor del joc: Albert Niubó Solana')">Autors del joc</button>
+    <button onclick="window.location.href='index.html'">Reiniciar el joc</button>
+    <button onclick="alert('Instruccions: Mou-te amb les fletxes per menjar tots els punts.')">Instruccions</button>
+    <button onclick="alert('nInformació del navegador: Firefox (última versió), Windows 11')">Informació</button>
+
+  </nav>
+
+  <div id="sketch-pacman"></div>
+  <div id="error-holder"></div>
+
+  <img src="media/pac.png" alt="pacman">
+
+</body>
+
+</html>
