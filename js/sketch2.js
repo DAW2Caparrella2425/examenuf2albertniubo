@@ -16,24 +16,22 @@ const arrFood = [];
 let imgPacmanLeft;
 let imgPacmanRight, imgPacmanUp, imgPacmanDown, imgPacman;
 let myPacman;
-let pacmanEnemy;
 let wakaSound;
 let timer = 0;
 let startTimeGame = 0;
-let endTimeGame = 0;
-let numberErrorLoadedSounds = 0;
 let imgPowerUp;
 const arrPowerUp = [];
 
 function preload() {
-  imgRock = loadImage("../media/roca.png", handleImage, handleError);
-  imgFood = loadImage("../media/food.png", handleImage, handleError);
-  imgPacman = loadImage("../media/pacLeft.png", handleImage, handleError);
-  imgPacmanRight = loadImage("../media/pacRight.png", handleImage, handleError);
-  imgPacmanUp = loadImage("../media/pacUp.png", handleImage, handleError);
-  imgPacmanLeft = loadImage("../media/pacLeft.png", handleImage, handleError);
-  imgPacmanDown = loadImage("../media/pacDown.png", handleImage, handleError);
-  imgPowerUp = loadImage("../media/powerupimg.png", handleImage, handleError);
+  imgRock = loadImage("../media/paret.png", handleImage, handleError);
+  imgFood = loadImage("../media/zombie.png", handleImage, handleError);
+  imgPacman = loadImage("../media/dreta.png", handleImage, handleError);
+  imgPacmanRight = loadImage("../media/dreta.png", handleImage, handleError);
+  imgPacmanUp = loadImage("../media/amunt.png", handleImage, handleError);
+  imgPacmanLeft = loadImage("../media/esquerra.png", handleImage, handleError);
+  imgPacmanDown = loadImage("../media/abaix.png", handleImage, handleError);
+  imgPowerUp = loadImage("../media/dracula.png", handleImage, handleError);
+
 
   wakaSound = loadSound("../media/audio/WakaWaka.mp3", handleSound, handleErrorSound);
 }
@@ -61,136 +59,134 @@ function handleImage() {
 }
 
 function setup() {
-
-  //numberImagesLoaded = 5; i numberErrorLoadedSounds = 1;
   createCanvas(configGame.WIDTH_CANVAS, configGame.HEIGHT_CANVAS + configGame.EXTRA_SIZE_HEIGHT).parent("sketch-pacman");
   for (let filaActual = 0; filaActual < configGame.ROWS; filaActual++) {
     for (let columnaActual = 0; columnaActual < configGame.COLUMNS; columnaActual++) {
       if (configGame.map[filaActual][columnaActual] === 1) {
         const roca = new gameObject(filaActual, columnaActual);
-       // console.log("\n he creat una roca a posicio: fila -> " + filaActual + " columna -> " + columnaActual);
         arrRocks.push(roca);
       }
       else if (configGame.map[filaActual][columnaActual] === 2) {
         const food = new Food(filaActual, columnaActual);
-      //  console.log("\n he craat una food a posicio: fila -> " + filaActual + " columna -> " + columnaActual);
         arrFood.push(food);
       }
       else if (configGame.map[filaActual][columnaActual] === 3) {
         myPacman = new Pacman(filaActual, columnaActual);
-       // console.log("\n he craat una pacaman a posicio: fila -> " + filaActual + " columna -> " + columnaActual);
       }
       else if (configGame.map[filaActual][columnaActual] === 5) {
         const powerUp = new Powup(filaActual, columnaActual);
         arrPowerUp.push(powerUp);
       }
-      else {
-        //Error objecte no defini
-
-      }
-    } // fi for columnes
-  } // fi for files
-  console.log("array rocks mida es : ", arrRocks.length);
-  console.log("array foods mida es : ", arrFood.length);
-startTimeGame = millis();
-} // fi setup
+    } 
+  } 
+  console.log("array rocks size: ", arrRocks.length);
+  console.log("array foods size: ", arrFood.length);
+  startTimeGame = millis();
+}
 
 function draw() {
   background(171, 248, 168);
-  // arrRocks.forEach((roca) => roca.showObject(imgRock));
-  //Pintem roques
+
+  // Draw rocks
   for (let i = 0; i < arrRocks.length; i++) {
     arrRocks[i].showObject(imgRock);
   }
 
-  //Pintem powerups
+  // Draw power-ups
   for (let i = 0; i < arrPowerUp.length; i++) {
     arrPowerUp[i].showObject(imgPowerUp);
   }
 
-  //Pintem food
+  // Draw food
   for (let i = 0; i < arrFood.length; i++) {
     arrFood[i].showObject(imgFood);
   }
-  //comprovar colisions pacman amb roques
+
+  // Check for collisions with rocks (no reset for now)
   for (let i = 0; i < arrRocks.length; i++) {
-    myPacman.testCollideRock ( arrRocks[i]);
+    myPacman.testCollideRock(arrRocks[i]);  // This should now do nothing on collision
   }
 
-//comprovar colisions pacman amb food
+  // Check for collisions with food (instant death)
   for (let i = 0; i < arrFood.length; i++) {
     let resultTest = myPacman.testCollideFood(arrFood[i]);
     if (resultTest) {
-      myPacman.scorePacman = myPacman.scorePacman + arrFood[i].pointsFood;
-      arrFood.splice(i, 1);
+      // Pacman hits food, instant game over
+      alert("Game Over! You hit a zombie item!");
+      restartGame();  // Call a function to restart the game
+      break;  // Stop further checks
     }
   }
-  //pINTEM ScoreBoard
 
-  //comprovar colisions pacman amb po
   for (let i = 0; i < arrPowerUp.length; i++) {
     let resultTest = myPacman.testCollidePowerup(arrPowerUp[i]);
-
     if (resultTest) {
-      //Hem xocat amb una powerup i l'activem
-      if (arrPowerUp[i].enabledPowerup === false) {
-        arrPowerUp[i].enabledPowerup = true;
-        arrPowerUp[i].startTimePowerup = millis();
-      } //if enable powerup
-    } //if resultTest
-  } //for powerup
- // textFont(font);
+      // Pacman hits food, instant game over
+      alert("Game Over! Dracula killed you!");
+      restartGame();  // Call a function to restart the game
+      break;  // Stop further checks
+    }
+  }
+
+    for (let i = 0; i < arrFood.length; i++) {
+    let resultTest = myPacman.testCollideFood(arrFood[i]);
+    if (resultTest) {
+      // Pacman hits food, instant game over
+      alert("Game Over! You hit a zombie item!");
+      restartGame();  // Call a function to restart the game
+      break;  // Stop further checks
+    }
+  }
+
+  // Draw score and timer
   textSize(20);
   textAlign(CENTER, CENTER);
-  timer = parseInt( millis() - startTimeGame);
+  timer = parseInt(millis() - startTimeGame);
   text("Score: " + myPacman.scorePacman, 150, configGame.HEIGHT_CANVAS + 50);
-//   text("Score: " + myPacman.scorePacman, 150, HEIGHT_CANVAS + 50);
   text("Time: " + timer, 150, configGame.HEIGHT_CANVAS + 100);
-  //Pintem pacman
-  //myPacman.showObject(imgPacman);
-  switch(myPacman.directionPacman){
-    case 1: //Move right
-            myPacman.showObject(imgPacmanRight);
-            break;
-    case 2: //Move up
-            myPacman.showObject(imgPacmanUp);
-            break;
-    case 3: //Move left
-            myPacman.showObject(imgPacmanLeft);
-            break
-    case 4: //Move down
-            myPacman.showObject(imgPacmanDown);
-            break;
-    default : myPacman.showObject(imgPacman);
 
+  // Draw Pacman with the correct direction
+  switch(myPacman.directionPacman){
+    case 1: myPacman.showObject(imgPacmanRight); break;
+    case 2: myPacman.showObject(imgPacmanUp); break;
+    case 3: myPacman.showObject(imgPacmanLeft); break;
+    case 4: myPacman.showObject(imgPacmanDown); break;
+    default: myPacman.showObject(imgPacman);
   }
 
-  if( wakaSound.isPlaying() === false) {
+  // Play waka sound
+  if (!wakaSound.isPlaying()) {
     wakaSound.play();
   }
-  else {
-    //wakaSound.play();
-  }
+
+  // Handle power-ups and game logic
   testFinishPowerup();
   testFinishGame();
+}
 
+function restartGame() {
+  // Reset the game state here
+  myPacman = null;
+  arrFood = [];
+  arrRocks = [];
+  arrPowerUp = [];
 
-  // pacmanEnemy.showObject(imgPacman);
-} // fi draw
+  // Reset the map and reload it
+  setup();
+  loop();  // Restart the game loop
+}
 
 function keyPressed() {
   if (keyCode === RIGHT_ARROW) {
-    console.log("Dreta");
     myPacman.moveRight();
   } else if (keyCode === LEFT_ARROW) {
-    console.log("Esquerra");
     myPacman.moveLeft();
   } else if (keyCode === UP_ARROW) {
     myPacman.moveUp();
   } else if (keyCode === DOWN_ARROW) {
     myPacman.moveDown();
   } else {
-    console.log("Error, tecla no reconeguda");
+    console.log("Error, invalid key");
     let error = new ErrorPac(101, "Press a valid key");
     error.toString();
   }
@@ -242,14 +238,11 @@ function testFinishPowerup() {
       console.log("Powerup activat numero " + i);
       console.log("Powerup activat startTime " + arrPowerUp[i].startTimePowerup);
       console.log("Powerup activat enabled " + arrPowerUp[i].enabledPowerup);
-      if ( (millis() - arrPowerUp[i].startTimePowerup) > 10000) {
-        arrPowerUp[i].enabledPowerup = false;
-        arrPowerUp.splice(i, 1);
-        console.log("Powerup desactivat numero " + i );
-      }
+      
     }
   }
 }
+
 /*globalThis: globalThis object. This is done to ensure
 that the p5.js library can call these functions when needed.
  */
@@ -257,3 +250,5 @@ globalThis.setup = setup;
 globalThis.draw = draw;
 globalThis.preload = preload;
 globalThis.keyPressed = keyPressed;
+
+
